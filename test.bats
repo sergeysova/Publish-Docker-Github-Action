@@ -506,11 +506,12 @@ teardown() {
   run /entrypoint.sh
 
   expectMockCalled "/usr/local/bin/docker login -u USERNAME --password-stdin
-/usr/local/bin/docker build -t my/repository:A -t my/repository:B -t my/repository:C .
+/usr/local/bin/docker build -t my/repository:latest -t my/repository:A -t my/repository:B -t my/repository:C .
+/usr/local/bin/docker push my/repository:latest
 /usr/local/bin/docker push my/repository:A
 /usr/local/bin/docker push my/repository:B
 /usr/local/bin/docker push my/repository:C
-/usr/local/bin/docker inspect --format={{index .RepoDigests 0}} my/repository:A
+/usr/local/bin/docker inspect --format={{index .RepoDigests 0}} my/repository:latest
 /usr/local/bin/docker logout"
 }
 
@@ -521,9 +522,10 @@ teardown() {
   run /entrypoint.sh
 
   expectMockCalled "/usr/local/bin/docker login -u USERNAME --password-stdin
-/usr/local/bin/docker build -t my/repository:A .
+/usr/local/bin/docker build -t my/repository:latest -t my/repository:A .
+/usr/local/bin/docker push my/repository:latest
 /usr/local/bin/docker push my/repository:A
-/usr/local/bin/docker inspect --format={{index .RepoDigests 0}} my/repository:A
+/usr/local/bin/docker inspect --format={{index .RepoDigests 0}} my/repository:latest
 /usr/local/bin/docker logout"
 }
 
@@ -534,8 +536,10 @@ teardown() {
 
   run /entrypoint.sh
 
-  expectMockCalled "/usr/local/bin/docker pull my/repository:A
-/usr/local/bin/docker build --cache-from my/repository:A -t my/repository:A -t my/repository:B .
+  expectMockCalled "/usr/local/bin/docker login -u USERNAME --password-stdin
+/usr/local/bin/docker pull my/repository:latest
+/usr/local/bin/docker build --cache-from my/repository:latest -t my/repository:latest -t my/repository:A -t my/repository:B .
+/usr/local/bin/docker push my/repository:latest
 /usr/local/bin/docker push my/repository:A
 /usr/local/bin/docker push my/repository:B"
 }
