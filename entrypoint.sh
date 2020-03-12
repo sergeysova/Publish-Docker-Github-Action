@@ -13,10 +13,11 @@ function main() {
     INPUT_NAME="${REGISTRY_NO_PROTOCOL}/${INPUT_NAME}"
   fi
 
+  translateDockerTag
+
   if uses "${INPUT_TAGS}"; then
-    TAGS=$(echo "${INPUT_TAGS}" | sed "s/,/ /g")
-  else 
-    translateDockerTag
+    SANITIZED_TAGS=$(echo "${INPUT_TAGS}" | sed "s/,/ /g")
+    TAGS="${TAGS} ${SANITIZED_TAGS}"
   fi
 
   if uses "${INPUT_WORKDIR}"; then
